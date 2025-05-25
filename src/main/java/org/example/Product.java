@@ -13,9 +13,14 @@ public class Product {
         this.stock = stock;
     }
 
-    public String getProduct(){
-        return "ID: " + id + " | Nombre: " + name + " | Precio: " + price + " | Stock: " + stock;
+    @Override
+    public String toString() {
+        return "ID: " + id +
+                " | Nombre: " + name +
+                " | Precio: $" + price +
+                " | Stock: " + stock;
     }
+
 
     public String getName(){
         return this.name;
@@ -30,7 +35,7 @@ public class Product {
     }
 
     public void setPrice(double number){
-        this.price = number;
+        if(number >= 0 ) this.price = number;
     }
 
     public int getStock(){
@@ -38,6 +43,6 @@ public class Product {
     }
 
     public void setStock(int number){
-        this.stock = number;
+        if(number >= 0) this.stock = number;
     }
 }

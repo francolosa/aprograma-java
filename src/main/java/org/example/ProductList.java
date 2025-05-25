@@ -6,20 +6,21 @@ import java.util.Scanner;
 
 public class ProductList {
     private static ArrayList<Product> productsList = new ArrayList<>();
+    private static Scanner keyboard = new Scanner(System.in);
 
     public static int getSize () {
         return productsList.size();
     }
+
     public static void addProduct(){
         System.out.print("***AGREGAR PRODUCTO***\n");
         int id = productsList.size()+1;
-        Scanner keyboard = new Scanner(System.in);
-        System.out.print("Ingrese nombre:");
-        String inputName = keyboard.nextLine();
-        System.out.print("Ingrese precio:");
-        double inputPrice = Double.parseDouble(keyboard.nextLine());
-        System.out.print("Ingrese stock:");
-        int inputStock = Integer.parseInt(keyboard.nextLine());
+
+        String inputName = InputHelper.readString("Ingrese nombre:");
+
+        double inputPrice = InputHelper.readDouble("Ingrese precio:");
+
+        int inputStock = InputHelper.readInt("Ingrese stock:");
 
         productsList.add(new Product(id, inputName, inputPrice, inputStock));
 
@@ -36,16 +37,15 @@ public class ProductList {
         } else {
             System.out.println("Lista de productos:");
             for (Product product : productsList) {
-                System.out.println(product.getProduct());
+                System.out.println(product);
             }
         }
     }
 
-    public static void searchproduct(){
+    public static void searchProduct(){
         System.out.print("***BUSCAR/EDITAR PRODUCTO***\n");
-        Scanner keyboard = new Scanner(System.in);
-        System.out.print("Ingrese su busqueda:");
-        String inputSearch = keyboard.nextLine();
+
+        String inputSearch = InputHelper.readString("Ingrese su busqueda:");
         Optional<Product> product = productsList.stream()
                     .filter(p -> p.getName().equalsIgnoreCase(inputSearch) || isInteger(inputSearch) && p.getId() == Integer.parseInt(inputSearch))
                     .findAny();
@@ -53,10 +53,8 @@ public class ProductList {
                 System.out.print("No se encontraron resultados");
             } else {
                 System.out.print("Se encontro el siguiente item:\n");
-                System.out.print(product.get().getProduct());
-                System.out.print("Desea actualizarlo?\n-1: si\n-2: no, volver");
-                keyboard = new Scanner(System.in);
-                String inputUpdate = keyboard.nextLine();
+                System.out.print(product);
+                String inputUpdate = InputHelper.readString("Desea actualizarlo?\n-1: si\n-2: no, volver");
 
                 switch (inputUpdate){
                     case "1":
@@ -76,26 +74,18 @@ public class ProductList {
                 .filter(p -> p.getId() == id)
                 .findAny();
 
-        System.out.print("Que deseas actualizar?\n-1: precio\n-2: stock");
-        Scanner keyboard = new Scanner(System.in);
-        String inputUpdate = keyboard.nextLine();
+        String inputUpdate = InputHelper.readString("Que deseas actualizar?\n-1: precio\n-2: stock");
 
         switch (inputUpdate){
             case "1":
-                System.out.print("Precio anterior: "+product.get().getPrice()+"\n inserte nuevo precio");
-                keyboard = new Scanner(System.in);
-                String newPrice = keyboard.nextLine();
-                double number = Double.parseDouble(newPrice);
+                double number = InputHelper.readDouble("Precio anterior: "+product.get().getPrice()+"\n inserte nuevo precio");
                 product.get().setPrice(number);
-                System.out.print("Confirmado, item actualizado:\n"+product.get().getProduct());
+                System.out.print("Confirmado, item actualizado:\n"+product);
                 break;
             case "2":
-                System.out.print("Stock anterior: "+product.get().getStock()+"\n inserte nuevo stock");
-                keyboard = new Scanner(System.in);
-                String newStock = keyboard.nextLine();
-                int stock = Integer.parseInt(newStock);
-                product.get().setStock(stock);
-                System.out.print("Confirmado, item actualizado:\n"+product.get().getProduct());
+                int newStock = InputHelper.readInt("Stock anterior: "+product.get().getStock()+"\n ingrese nuevo stock");
+                product.get().setStock(newStock);
+                System.out.print("Confirmado, item actualizado:\n"+product);
                 break;
             default:
                 System.out.println("Opción no válida");
@@ -109,9 +99,7 @@ public class ProductList {
 
         System.out.print("***ELIMINAR PRODUCTO***\n");
         listProducts();
-        System.out.print("Ingrese el ID del item que deseas eliminar");
-        Scanner inputIdToDelete = new Scanner(System.in);
-        String inputDelete = inputIdToDelete.nextLine();
+        String inputDelete = InputHelper.readString("Ingrese el ID del item que deseas eliminar");
         productsList.removeIf(product -> product.getId() == Integer.parseInt(inputDelete));
         listProducts();
     }
